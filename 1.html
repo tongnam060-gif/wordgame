@@ -18,12 +18,29 @@
             line-height: 1.6;
             background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M20,50 Q50,10 80,50 T140,50" stroke="%23ffd6e7" fill="none" stroke-width="2"/><circle cx="50" cy="50" r="5" fill="%23a6e3ff"/><circle cx="30" cy="30" r="3" fill="%23ffb8b8"/><circle cx="70" cy="70" r="4" fill="%23c5ffc5"/></svg>');
             background-size: 200px;
+            position: relative;
         }
         
+        /* 登入按鈕 - 右上角 */
+        .login-top-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #ff9a76;
+            color: white;
+            z-index: 100;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-top-btn:hover {
+            background-color: #ff8a65;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            padding-top: 80px; /* 為右上角按鈕留空間 */
         }
         
         header {
@@ -70,50 +87,6 @@
             font-size: 2rem;
             margin: 0 10px;
             color: #ff7043;
-        }
-        
-        .mode-selector {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            gap: 20px;
-        }
-        
-        .mode-btn {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .mode-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-        
-        .teacher-btn {
-            background-color: #ff9a76;
-            color: white;
-        }
-        
-        .teacher-btn:hover {
-            background-color: #ff8a65;
-        }
-        
-        .student-btn {
-            background-color: #81c784;
-            color: white;
-        }
-        
-        .student-btn:hover {
-            background-color: #66bb6a;
         }
         
         .panel {
@@ -368,10 +341,10 @@
         }
         
         .logout-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             background-color: #ef9a9a;
+            margin-top: 20px;
+            width: 100%;
+            justify-content: center;
         }
         
         .logout-btn:hover {
@@ -379,7 +352,7 @@
         }
         
         .hidden {
-            display: none;
+            display: none !important;
         }
         
         .notification {
@@ -430,15 +403,6 @@
             border-color: #1976d2;
         }
         
-        .class-id-input {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .class-id-input input {
-            flex: 1;
-        }
-        
         .student-info {
             font-size: 1.3rem;
             margin-bottom: 25px;
@@ -454,14 +418,6 @@
             gap: 15px;
             margin-top: 20px;
             flex-wrap: wrap;
-        }
-        
-        .delete-all-btn {
-            background-color: #ef9a9a;
-        }
-        
-        .delete-all-btn:hover {
-            background-color: #e57373;
         }
         
         .small-btn {
@@ -514,6 +470,12 @@
             overflow-y: auto;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             border: 5px solid #ffecb3;
+        }
+        
+        .login-modal-content {
+            max-width: 400px;
+            border: 5px solid #ff9a76;
+            text-align: center;
         }
         
         .modal-header {
@@ -657,7 +619,6 @@
             font-size: 1.2rem;
         }
         
-        /* 新增的樣式：隱藏字詞顯示區域 */
         .character-display.hidden {
             display: none;
         }
@@ -793,21 +754,6 @@
             z-index: 0;
         }
         
-        .star {
-            color: #ffd54f;
-            font-size: 1.5rem;
-        }
-        
-        .heart {
-            color: #ef9a9a;
-            font-size: 1.2rem;
-        }
-        
-        .cloud {
-            color: #bbdefb;
-            font-size: 2rem;
-        }
-        
         /* 進度條 */
         .progress-bar {
             width: 100%;
@@ -823,12 +769,6 @@
             background: linear-gradient(90deg, #a5d6a7, #81c784);
             border-radius: 10px;
             transition: width 0.5s;
-        }
-        
-        /* 動物圖標 */
-        .animal-icon {
-            font-size: 2rem;
-            margin-right: 10px;
         }
         
         /* 獎章樣式 */
@@ -870,8 +810,11 @@
     </style>
 </head>
 <body>
+    <button class="btn login-top-btn" id="topLoginBtn">
+        <span>👩‍🏫</span> 登入
+    </button>
+
     <div class="container">
-        <!-- 裝飾元素 -->
         <div class="decoration" style="top: 10px; left: 10px;">⭐</div>
         <div class="decoration" style="top: 50px; right: 30px;">🐱</div>
         <div class="decoration" style="bottom: 100px; left: 5%;">🐶</div>
@@ -882,39 +825,23 @@
             <p class="subtitle">課次學習 · 輕鬆認字</p>
         </header>
         
-        <!-- 模式選擇 -->
-        <div class="mode-selector">
-            <button class="mode-btn teacher-btn" id="teacherModeBtn">
-                <span>👩‍🏫</span> 教師模式
-            </button>
-            <button class="mode-btn student-btn" id="studentModeBtn">
-                <span>👦</span> 學生模式
-            </button>
-        </div>
-        
-        <!-- 教師模式 -->
         <div class="panel" id="teacherPanel">
             <h2>👩‍🏫 教師設置</h2>
-            <div class="form-group">
-                <label for="teacherPassword">🔑 教師密碼</label>
-                <input type="password" id="teacherPassword" placeholder="請輸入教師密碼">
-            </div>
-            <button class="btn" id="teacherLoginBtn">
-                <span>🔓</span> 登入教師模式
-            </button>
             
-            <div class="hidden" id="teacherSettings">
-                <!-- 課次管理 -->
+            <div id="teacherSettings">
                 <div class="lesson-management">
                     <h3>📖 課次管理</h3>
                     <div class="lesson-tabs" id="lessonTabs">
-                        <!-- 課次標籤會動態生成 -->
                     </div>
                     
                     <div class="lesson-content" id="lessonContent">
                         <div class="form-group">
+                            <label for="lessonNumber">課次編號 (顯示於卡片上方大字)</label>
+                            <input type="text" id="lessonNumber" placeholder="例如：第一課、單元一、Week 1">
+                        </div>
+                        <div class="form-group">
                             <label for="lessonTitle">課次標題</label>
-                            <input type="text" id="lessonTitle" placeholder="例如：第一課 - 動物世界">
+                            <input type="text" id="lessonTitle" placeholder="例如：動物世界">
                         </div>
                         
                         <div class="form-group">
@@ -923,13 +850,7 @@
 小貓
 小狗
 兔子
-小鳥
-金魚
-烏龜
-松鼠
-大象
-長頸鹿
-猴子"></textarea>
+小鳥"></textarea>
                             <p class="example-format">建議每課 8-12 個詞語，適合小一、二學生學習</p>
                         </div>
                         
@@ -952,34 +873,17 @@
                     </div>
                 </div>
                 
-                <!-- 測驗設置 -->
                 <div class="test-settings-group">
                     <div class="form-group">
                         <label for="testSize">📋 每課測驗題目數量</label>
-                        <select id="testSize">
-                            <option value="5">5題</option>
-                            <option value="8" selected>8題</option>
-                            <option value="10">10題</option>
-                            <option value="12">12題</option>
-                            <option value="15">15題</option>
-                            <option value="20">20題</option>
-                            <option value="25">25題</option>
-                            <option value="30">30題</option>
-                            <option value="all">所有詞語</option>
-                        </select>
-                        <p class="example-format">選擇測驗題目數量</p>
+                        <input type="number" id="testSize" min="1" value="8">
+                        <p class="example-format">輸入測驗題目數量，若大於該課詞語數則為全測</p>
                     </div>
                     
                     <div class="form-group">
                         <label for="optionCount">🎯 每題選項數量</label>
-                        <select id="optionCount">
-                            <option value="2">2個選項</option>
-                            <option value="3">3個選項</option>
-                            <option value="4" selected>4個選項</option>
-                            <option value="5">5個選項</option>
-                            <option value="6">6個選項</option>
-                        </select>
-                        <p class="example-format">選擇每題提供多少個選項</p>
+                        <input type="number" id="optionCount" min="2" max="6" value="4">
+                        <p class="example-format">輸入每題提供多少個選項 (建議 2~6)</p>
                     </div>
                 </div>
                 
@@ -1000,11 +904,14 @@
                     <span>✅</span> 保存所有設置
                 </button>
                 
-                <div class="form-group">
+                <div class="form-group" style="margin-top: 30px;">
                     <h3>📊 學生測試記錄</h3>
                     <div class="record-actions">
                         <button class="btn btn-warning" id="viewRecordsBtn">
                             <span>📋</span> 查看記錄
+                        </button>
+                        <button class="btn btn-info" id="exportRecordsBtn">
+                            <span>📥</span> 匯出記錄
                         </button>
                         <button class="btn btn-danger delete-all-btn" id="deleteAllRecordsBtn">
                             <span>🗑️</span> 刪除所有記錄
@@ -1022,18 +929,16 @@
                             </tr>
                         </thead>
                         <tbody id="recordsBody">
-                            <!-- 記錄會動態載入 -->
                         </tbody>
                     </table>
                 </div>
                 
                 <button class="btn logout-btn" id="teacherLogoutBtn">
-                    <span>👋</span> 登出
+                    <span>👋</span> 退出教師模式
                 </button>
             </div>
         </div>
         
-        <!-- 學生模式 -->
         <div class="panel active" id="studentPanel">
             <h2>👦 學生測試</h2>
             <div class="form-group">
@@ -1042,11 +947,9 @@
                 <p class="example-format">可輸入班級學號、姓名或其他識別資訊</p>
             </div>
             
-            <!-- 課次選擇 -->
             <div class="lesson-selection" id="lessonSelection">
                 <h3>📚 請選擇要測驗的課次</h3>
                 <div class="lesson-cards" id="lessonCards">
-                    <!-- 課次卡片會動態生成 -->
                 </div>
             </div>
             
@@ -1054,22 +957,17 @@
                 <span>🚀</span> 開始測驗
             </button>
             
-            <!-- 測驗界面 -->
             <div class="test-container hidden" id="testContainer">
                 <div class="student-info" id="currentStudentInfo">
-                    <!-- 當前學生資訊會顯示在這裡 -->
                 </div>
                 <div class="question-number" id="questionNumber">第 1 題 / 共 8 題</div>
                 
-                <!-- 提示文字區域 -->
                 <div class="question-prompt" id="questionPrompt">
                     🔊 請聽取語音後選擇正確的詞語
                 </div>
                 
-                <!-- 隱藏字詞顯示 -->
                 <div class="character-display hidden" id="characterDisplay">詞語</div>
                 
-                <!-- 進度條 -->
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                 </div>
@@ -1091,7 +989,6 @@
                 </div>
                 
                 <div class="options-container" id="optionsContainer">
-                    <!-- 選項會動態生成 -->
                 </div>
                 
                 <button class="btn hidden" id="nextQuestionBtn">
@@ -1099,12 +996,10 @@
                 </button>
             </div>
             
-            <!-- 測驗結果 -->
             <div class="results-container hidden" id="resultsContainer">
                 <div class="medal gold-medal" id="resultMedal">🏆</div>
                 <h2>🎉 測驗完成!</h2>
                 <div class="student-info" id="resultStudentInfo">
-                    <!-- 學生資訊會顯示在這裡 -->
                 </div>
                 <div class="score" id="finalScore">100分</div>
                 <p id="resultMessage">恭喜您完成測驗!</p>
@@ -1127,7 +1022,22 @@
             </div>
         </div>
         
-        <!-- 答題詳情彈窗 -->
+        <div class="detail-modal" id="loginModal">
+            <div class="modal-content login-modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">教師登入</h3>
+                    <button class="close-btn" id="closeLoginModal">&times;</button>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label for="teacherPasswordInput">🔑 請輸入教師密碼</label>
+                    <input type="password" id="teacherPasswordInput" placeholder="">
+                </div>
+                <button class="btn btn-success" id="confirmLoginBtn" style="width: 100%; justify-content: center;">
+                    <span>🔓</span> 登入
+                </button>
+            </div>
+        </div>
+
         <div class="detail-modal" id="detailModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1135,7 +1045,6 @@
                     <button class="close-btn" id="closeDetailModal">&times;</button>
                 </div>
                 <div id="detailModalContent">
-                    <!-- 答題詳情會動態載入 -->
                 </div>
             </div>
         </div>
@@ -1144,7 +1053,6 @@
         </footer>
     </div>
     
-    <!-- 通知訊息 -->
     <div class="notification" id="notification">操作成功!</div>
 
     <script>
@@ -1154,29 +1062,29 @@
         let currentLanguage = 'mandarin'; // 當前語音模式
         let currentLesson = 1; // 當前選擇的課次
         
-        // 課次資料 (預設20課)
+        // 課次資料 (加入 number 欄位支援)
         let lessons = JSON.parse(localStorage.getItem('lessons')) || [
-            { id: 1, title: "第一課 - 動物世界", vocabulary: ["小貓", "小狗", "兔子", "小鳥", "金魚", "烏龜", "松鼠", "大象"] },
-            { id: 2, title: "第二課 - 水果家族", vocabulary: ["蘋果", "香蕉", "西瓜", "葡萄", "橙子", "芒果", "草莓", "菠蘿"] },
-            { id: 3, title: "第三課 - 顏色王國", vocabulary: ["紅色", "黃色", "藍色", "綠色", "白色", "黑色", "紫色", "橙色"] },
-            { id: 4, title: "第四課 - 家人稱呼", vocabulary: ["爸爸", "媽媽", "哥哥", "姐姐", "弟弟", "妹妹", "爺爺", "奶奶"] },
-            { id: 5, title: "第五課 - 學校生活", vocabulary: ["老師", "同學", "書包", "鉛筆", "橡皮", "書本", "課桌", "椅子"] },
-            { id: 6, title: "第六課 - 身體部位", vocabulary: ["眼睛", "耳朵", "鼻子", "嘴巴", "頭髮", "手", "腳", "臉"] },
-            { id: 7, title: "第七課 - 自然風景", vocabulary: ["太陽", "月亮", "星星", "雲朵", "雨水", "風", "山", "河"] },
-            { id: 8, title: "第八課 - 交通工具", vocabulary: ["汽車", "火車", "飛機", "輪船", "巴士", "單車", "摩托車", "地鐵"] },
-            { id: 9, title: "第九課 - 日常動作", vocabulary: ["吃飯", "喝水", "睡覺", "走路", "跑步", "說話", "唱歌", "跳舞"] },
-            { id: 10, title: "第十課 - 季節天氣", vocabulary: ["春天", "夏天", "秋天", "冬天", "晴天", "雨天", "陰天", "颳風"] },
-            { id: 11, title: "第十一課 - 數字天地", vocabulary: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"] },
-            { id: 12, title: "第十二課 - 方位詞語", vocabulary: ["上面", "下面", "左邊", "右邊", "前面", "後面", "裡面", "外面"] },
-            { id: 13, title: "第十三課 - 時間概念", vocabulary: ["今天", "明天", "昨天", "早上", "中午", "下午", "晚上", "小時"] },
-            { id: 14, title: "第十四課 - 常見食物", vocabulary: ["米飯", "麵條", "蔬菜", "肉類", "雞蛋", "牛奶", "麵包", "蛋糕"] },
-            { id: 15, title: "第十五課 - 學習用品", vocabulary: ["尺子", "剪刀", "膠水", "蠟筆", "畫紙", "字典", "筆記本", "文件夾"] },
-            { id: 16, title: "第十六課 - 常見動物", vocabulary: ["老虎", "獅子", "猴子", "熊貓", "長頸鹿", "斑馬", "企鵝", "海豚"] },
-            { id: 17, title: "第十七課 - 場所地點", vocabulary: ["學校", "公園", "醫院", "超市", "圖書館", "游泳池", "遊樂場", "餐廳"] },
-            { id: 18, title: "第十八課 - 情緒感受", vocabulary: ["開心", "難過", "生氣", "害怕", "驚訝", "喜歡", "討厭", "緊張"] },
-            { id: 19, title: "第十九課 - 常見昆蟲", vocabulary: ["蝴蝶", "蜜蜂", "蜻蜓", "螞蟻", "蜘蛛", "蚊子", "蒼蠅", "蟋蟀"] },
-            { id: 20, title: "第二十課 - 節日慶祝", vocabulary: ["新年", "聖誕", "生日", "中秋", "端午", "兒童節", "母親節", "父親節"] }
+            { id: 1, number: "第一課", title: "動物世界", vocabulary: ["小貓", "小狗", "兔子", "小鳥", "金魚", "烏龜", "松鼠", "大象"] },
+            { id: 2, number: "第二課", title: "水果家族", vocabulary: ["蘋果", "香蕉", "西瓜", "葡萄", "橙子", "芒果", "草莓", "菠蘿"] },
+            { id: 3, number: "第三課", title: "顏色王國", vocabulary: ["紅色", "黃色", "藍色", "綠色", "白色", "黑色", "紫色", "橙色"] },
+            { id: 4, number: "第四課", title: "家人稱呼", vocabulary: ["爸爸", "媽媽", "哥哥", "姐姐", "弟弟", "妹妹", "爺爺", "奶奶"] },
+            { id: 5, number: "第五課", title: "學校生活", vocabulary: ["老師", "同學", "書包", "鉛筆", "橡皮", "書本", "課桌", "椅子"] },
+            { id: 6, number: "第六課", title: "身體部位", vocabulary: ["眼睛", "耳朵", "鼻子", "嘴巴", "頭髮", "手", "腳", "臉"] },
+            { id: 7, number: "第七課", title: "自然風景", vocabulary: ["太陽", "月亮", "星星", "雲朵", "雨水", "風", "山", "河"] }
         ];
+
+        // 確保相容舊有的 local storage 資料 (沒有 number 的自動拆分或補齊)
+        lessons.forEach(lesson => {
+            if (!lesson.number) {
+                if (lesson.title && lesson.title.includes(' - ')) {
+                    const parts = lesson.title.split(' - ');
+                    lesson.number = parts[0].trim();
+                    lesson.title = parts.slice(1).join(' - ').trim();
+                } else {
+                    lesson.number = `第${lesson.id}課`;
+                }
+            }
+        });
         
         let testSettings = {
             testSize: 8,
@@ -1201,8 +1109,12 @@
         // DOM 元素
         const teacherPanel = document.getElementById('teacherPanel');
         const studentPanel = document.getElementById('studentPanel');
-        const teacherModeBtn = document.getElementById('teacherModeBtn');
-        const studentModeBtn = document.getElementById('studentModeBtn');
+        const topLoginBtn = document.getElementById('topLoginBtn');
+        const loginModal = document.getElementById('loginModal');
+        const confirmLoginBtn = document.getElementById('confirmLoginBtn');
+        const teacherPasswordInput = document.getElementById('teacherPasswordInput');
+        const closeLoginModal = document.getElementById('closeLoginModal');
+        
         const notification = document.getElementById('notification');
         const detailModal = document.getElementById('detailModal');
         const closeDetailModal = document.getElementById('closeDetailModal');
@@ -1213,18 +1125,27 @@
         
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
-            // 設置模式切換
-            teacherModeBtn.addEventListener('click', () => switchMode('teacher'));
-            studentModeBtn.addEventListener('click', () => switchMode('student'));
+            // 登入相關事件
+            topLoginBtn.addEventListener('click', () => {
+                loginModal.style.display = 'flex';
+                teacherPasswordInput.value = '';
+                teacherPasswordInput.focus();
+            });
+            
+            closeLoginModal.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+            });
+            
+            confirmLoginBtn.addEventListener('click', handleLogin);
+            teacherPasswordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
             
             // 初始化教師模式事件
             initTeacherMode();
             
             // 初始化學生模式事件
             initStudentMode();
-            
-            // 預設顯示學生模式
-            switchMode('student');
             
             // 載入儲存的設置
             loadSavedSettings();
@@ -1235,62 +1156,71 @@
             // 初始化學生課次選擇
             initLessonSelection();
             
-            // 關閉彈窗事件
+            // 關閉詳情彈窗事件
             closeDetailModal.addEventListener('click', function() {
                 detailModal.style.display = 'none';
             });
             
             // 點擊彈窗外關閉彈窗
-            detailModal.addEventListener('click', function(e) {
+            window.addEventListener('click', function(e) {
                 if (e.target === detailModal) {
                     detailModal.style.display = 'none';
                 }
+                if (e.target === loginModal) {
+                    loginModal.style.display = 'none';
+                }
             });
         });
+        
+        // 處理登入
+        function handleLogin() {
+            const pwd = teacherPasswordInput.value;
+            if (pwd === teacherPassword) {
+                loginModal.style.display = 'none';
+                switchMode('teacher');
+                showNotification('登入成功!', 'success');
+            } else {
+                showNotification('密碼錯誤!', 'error');
+            }
+        }
         
         // 切換模式
         function switchMode(mode) {
             currentMode = mode;
             
-            // 更新按鈕狀態
-            teacherModeBtn.classList.toggle('active', mode === 'teacher');
-            studentModeBtn.classList.toggle('active', mode === 'student');
-            
-            // 更新面板顯示
-            teacherPanel.classList.toggle('active', mode === 'teacher');
-            studentPanel.classList.toggle('active', mode === 'student');
-            
-            // 如果切換到教師模式，清空密碼欄位
             if (mode === 'teacher') {
-                document.getElementById('teacherPassword').value = '';
-                document.getElementById('teacherSettings').classList.add('hidden');
+                teacherPanel.classList.add('active');
+                studentPanel.classList.remove('active');
+                topLoginBtn.style.display = 'none';
+            } else {
+                teacherPanel.classList.remove('active');
+                studentPanel.classList.add('active');
+                topLoginBtn.style.display = 'block';
             }
         }
         
         // 初始化教師模式事件
         function initTeacherMode() {
-            const teacherLoginBtn = document.getElementById('teacherLoginBtn');
             const saveSettingsBtn = document.getElementById('saveSettingsBtn');
             const teacherLogoutBtn = document.getElementById('teacherLogoutBtn');
             const viewRecordsBtn = document.getElementById('viewRecordsBtn');
+            const exportRecordsBtn = document.getElementById('exportRecordsBtn');
             const deleteAllRecordsBtn = document.getElementById('deleteAllRecordsBtn');
             const cantoneseBtn = document.getElementById('cantoneseBtn');
             const mandarinBtn = document.getElementById('mandarinBtn');
             
-            teacherLoginBtn.addEventListener('click', function() {
-                const password = document.getElementById('teacherPassword').value;
-                
-                if (password === teacherPassword) {
-                    document.getElementById('teacherSettings').classList.remove('hidden');
-                    showNotification('登入成功!', 'success');
-                } else {
-                    showNotification('密碼錯誤!', 'error');
-                }
-            });
-            
             saveSettingsBtn.addEventListener('click', function() {
                 const testSize = document.getElementById('testSize').value;
                 const optionCount = parseInt(document.getElementById('optionCount').value);
+                
+                if (testSize <= 0) {
+                    showNotification('題目數量必須大於 0', 'error');
+                    return;
+                }
+                if (optionCount < 2 || optionCount > 6) {
+                    showNotification('選項數量建議在 2~6 之間', 'error');
+                    return;
+                }
                 
                 testSettings.testSize = testSize;
                 testSettings.optionCount = optionCount;
@@ -1303,14 +1233,12 @@
             });
             
             teacherLogoutBtn.addEventListener('click', function() {
-                document.getElementById('teacherSettings').classList.add('hidden');
-                document.getElementById('teacherPassword').value = '';
-                showNotification('已登出教師模式', 'success');
+                switchMode('student');
+                showNotification('已退出教師模式', 'success');
             });
             
             viewRecordsBtn.addEventListener('click', function() {
                 const recordsTable = document.getElementById('recordsTable');
-                
                 // 切換顯示/隱藏
                 recordsTable.classList.toggle('hidden');
                 
@@ -1318,6 +1246,37 @@
                     // 更新記錄表格
                     updateRecordsTable();
                 }
+            });
+            
+            // 匯出功能
+            exportRecordsBtn.addEventListener('click', function() {
+                if (studentRecords.length === 0) {
+                    showNotification('目前沒有任何記錄可以匯出!', 'error');
+                    return;
+                }
+                
+                // 加入 BOM，避免 Excel 打開中文亂碼
+                let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
+                // CSV 標題
+                csvContent += "學生,課次,分數,日期,所用時間\n";
+                
+                // 填入資料
+                studentRecords.forEach(record => {
+                    const student = record.studentInfo.replace(/,/g, "，"); // 避免名字內有逗號破壞格式
+                    const lesson = (record.lessonTitle || '第' + record.lessonId + '課').replace(/,/g, "，");
+                    const row = `${student},${lesson},${record.score},${record.date},${record.time}`;
+                    csvContent += row + "\n";
+                });
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "學生測試記錄.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showNotification('記錄已成功匯出!', 'success');
             });
             
             deleteAllRecordsBtn.addEventListener('click', function() {
@@ -1366,17 +1325,22 @@
             
             // 生成課次標籤
             updateLessonTabs();
-            
             // 顯示第一課
             showLessonContent(1);
             
             // 保存課次
             saveLessonBtn.addEventListener('click', function() {
+                const lessonNumber = document.getElementById('lessonNumber').value.trim();
                 const lessonTitle = document.getElementById('lessonTitle').value.trim();
                 const vocabularyText = document.getElementById('lessonVocabulary').value;
                 const vocabulary = vocabularyText.split('\n')
                     .map(word => word.trim())
                     .filter(word => word.length > 0);
+                
+                if (!lessonNumber) {
+                    showNotification('請輸入課次編號!', 'error');
+                    return;
+                }
                 
                 if (!lessonTitle) {
                     showNotification('請輸入課次標題!', 'error');
@@ -1391,129 +1355,93 @@
                 // 更新課次資料
                 const lesson = lessons.find(l => l.id === currentLesson);
                 if (lesson) {
+                    lesson.number = lessonNumber;
                     lesson.title = lessonTitle;
                     lesson.vocabulary = vocabulary;
                 } else {
                     lessons.push({
                         id: currentLesson,
+                        number: lessonNumber,
                         title: lessonTitle,
                         vocabulary: vocabulary
                     });
                 }
                 
-                // 儲存到 localStorage
                 localStorage.setItem('lessons', JSON.stringify(lessons));
-                
-                // 更新顯示
                 updateLessonTabs();
                 updateLessonVocabularyDisplay();
-                updateLessonCards(); // 同時更新學生模式的課次卡片
-                
+                updateLessonCards();
                 showNotification('課次保存成功!', 'success');
             });
             
-            // 新增課次
             addLessonBtn.addEventListener('click', function() {
-                // 尋找下一個可用的課次ID
                 const maxId = lessons.reduce((max, lesson) => Math.max(max, lesson.id), 0);
                 const newLessonId = maxId + 1;
-                
-                // 新增課次
                 lessons.push({
                     id: newLessonId,
-                    title: `第${newLessonId}課 - 新課次`,
+                    number: `第${newLessonId}課`,
+                    title: `新課次標題`,
                     vocabulary: []
                 });
-                
-                // 儲存到 localStorage
                 localStorage.setItem('lessons', JSON.stringify(lessons));
-                
-                // 切換到新課次
                 currentLesson = newLessonId;
                 updateLessonTabs();
                 showLessonContent(newLessonId);
-                
                 showNotification(`新增第${newLessonId}課成功!`, 'success');
             });
             
-            // 刪除課次
             deleteLessonBtn.addEventListener('click', function() {
                 if (lessons.length <= 1) {
                     showNotification('至少需要保留一個課次!', 'error');
                     return;
                 }
+                const lessonToDelete = lessons.find(l => l.id === currentLesson);
+                if (!confirm(`確定要刪除「${lessonToDelete.number} - ${lessonToDelete.title}」嗎？此操作無法復原！`)) return;
                 
-                if (!confirm(`確定要刪除「${lessons.find(l => l.id === currentLesson).title}」嗎？此操作無法復原！`)) {
-                    return;
-                }
-                
-                // 刪除課次
                 const lessonIndex = lessons.findIndex(l => l.id === currentLesson);
                 lessons.splice(lessonIndex, 1);
-                
-                // 儲存到 localStorage
                 localStorage.setItem('lessons', JSON.stringify(lessons));
-                
-                // 切換到第一課
-                currentLesson = 1;
+                currentLesson = lessons[0].id; // 跳回第一個可用課次
                 updateLessonTabs();
-                showLessonContent(1);
-                updateLessonCards(); // 同時更新學生模式的課次卡片
-                
+                showLessonContent(currentLesson);
+                updateLessonCards();
                 showNotification('課次已刪除', 'success');
             });
         }
         
-        // 更新課次標籤
         function updateLessonTabs() {
             lessonTabs.innerHTML = '';
-            
-            // 按ID排序
             lessons.sort((a, b) => a.id - b.id);
-            
             lessons.forEach(lesson => {
                 const tab = document.createElement('div');
                 tab.className = `lesson-tab ${lesson.id === currentLesson ? 'active' : ''}`;
                 tab.dataset.lessonId = lesson.id;
-                tab.innerHTML = `
-                    <span>📖</span> ${lesson.title}
-                `;
-                
+                tab.innerHTML = `<span>📖</span> ${lesson.number} ${lesson.title ? '- ' + lesson.title : ''}`;
                 tab.addEventListener('click', function() {
-                    const lessonId = parseInt(this.dataset.lessonId);
-                    currentLesson = lessonId;
-                    showLessonContent(lessonId);
+                    currentLesson = parseInt(this.dataset.lessonId);
+                    showLessonContent(currentLesson);
                     updateLessonTabs();
                 });
-                
                 lessonTabs.appendChild(tab);
             });
         }
         
-        // 顯示課次內容
         function showLessonContent(lessonId) {
-            const lesson = lessons.find(l => l.id === lessonId);
-            
+            let lesson = lessons.find(l => l.id === lessonId);
             if (!lesson) {
-                // 如果找不到課次，顯示第一課
-                lessonId = 1;
-                currentLesson = 1;
                 lesson = lessons[0];
+                currentLesson = lesson.id;
             }
-            
+            document.getElementById('lessonNumber').value = lesson.number;
             document.getElementById('lessonTitle').value = lesson.title;
             document.getElementById('lessonVocabulary').value = lesson.vocabulary.join('\n');
-            
             updateLessonVocabularyDisplay();
         }
         
-        // 更新課次詞語顯示
         function updateLessonVocabularyDisplay() {
             const lesson = lessons.find(l => l.id === currentLesson);
             const container = document.getElementById('currentLessonVocabulary');
-            
             if (!lesson) return;
-            
             container.innerHTML = '';
             
             lesson.vocabulary.forEach(word => {
@@ -1523,7 +1451,6 @@
                 container.appendChild(wordElement);
             });
             
-            // 如果沒有詞語，顯示提示
             if (lesson.vocabulary.length === 0) {
                 const emptyMsg = document.createElement('div');
                 emptyMsg.textContent = '本課暫無詞語，請在上方添加';
@@ -1535,13 +1462,9 @@
             }
         }
         
-        // 初始化學生課次選擇
         function initLessonSelection() {
             updateLessonCards();
-            
-            // 為查看答題詳情按鈕添加事件
             document.getElementById('viewTestDetailsBtn').addEventListener('click', function() {
-                // 顯示最近一次的測試詳情
                 if (studentRecords.length > 0) {
                     showTestDetails(studentRecords.length - 1);
                 } else {
@@ -1550,41 +1473,28 @@
             });
         }
         
-        // 更新課次卡片
         function updateLessonCards() {
             lessonCards.innerHTML = '';
-            
-            // 按ID排序
             lessons.sort((a, b) => a.id - b.id);
-            
             lessons.forEach(lesson => {
                 const card = document.createElement('div');
                 card.className = `lesson-card ${lesson.id === currentLesson ? 'active' : ''}`;
                 card.dataset.lessonId = lesson.id;
                 card.innerHTML = `
-                    <div class="lesson-number">第${lesson.id}課</div>
+                    <div class="lesson-number">${lesson.number}</div>
                     <div class="lesson-title">${lesson.title}</div>
                     <div class="word-count">${lesson.vocabulary.length} 個詞語</div>
                 `;
                 
                 card.addEventListener('click', function() {
-                    // 移除所有卡片的active類
-                    document.querySelectorAll('.lesson-card').forEach(c => {
-                        c.classList.remove('active');
-                    });
-                    
-                    // 為當前卡片添加active類
+                    document.querySelectorAll('.lesson-card').forEach(c => c.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    // 設置當前課次
                     currentLesson = parseInt(this.dataset.lessonId);
                 });
-                
                 lessonCards.appendChild(card);
             });
         }
         
-        // 更新記錄表格
         function updateRecordsTable() {
             const recordsBody = document.getElementById('recordsBody');
             recordsBody.innerHTML = '';
@@ -1598,21 +1508,19 @@
                     <td>${record.date}</td>
                     <td>${record.time}</td>
                     <td>
-                        <button class="btn btn-info small-btn view-detail-btn" data-index="${index}">查看詳情</button>
+                        <button class="btn btn-info small-btn view-detail-btn" data-index="${index}">查看</button>
                         <button class="btn btn-danger small-btn delete-record-btn" data-index="${index}">刪除</button>
                     </td>
                 `;
                 recordsBody.appendChild(row);
             });
             
-            // 如果沒有記錄，顯示提示
             if (studentRecords.length === 0) {
                 const row = document.createElement('tr');
                 row.innerHTML = `<td colspan="6" style="text-align:center;">暫無測試記錄</td>`;
                 recordsBody.appendChild(row);
             }
             
-            // 為刪除按鈕添加事件
             document.querySelectorAll('.delete-record-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const index = parseInt(this.dataset.index);
@@ -1625,85 +1533,41 @@
                 });
             });
             
-            // 為查看詳情按鈕添加事件
             document.querySelectorAll('.view-detail-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const index = parseInt(this.dataset.index);
-                    showTestDetails(index);
+                    showTestDetails(parseInt(this.dataset.index));
                 });
             });
         }
         
-        // 顯示測試詳情
         function showTestDetails(recordIndex) {
             const record = studentRecords[recordIndex];
+            if (!record) return;
             
-            if (!record) {
-                showNotification('找不到測試記錄', 'error');
-                return;
-            }
-            
-            // 設置彈窗標題
             detailModalTitle.textContent = `學生答題詳情 - ${record.studentInfo}`;
-            
-            // 清空內容
             detailModalContent.innerHTML = '';
             
-            // 創建測試摘要
             const summaryDiv = document.createElement('div');
             summaryDiv.className = 'test-summary';
             summaryDiv.innerHTML = `
-                <div class="summary-item">
-                    <div class="summary-label">學生</div>
-                    <div class="summary-value">${record.studentInfo}</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">課次</div>
-                    <div class="summary-value">${record.lessonTitle || '第' + record.lessonId + '課'}</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">分數</div>
-                    <div class="summary-value">${record.score}分</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">日期</div>
-                    <div class="summary-value">${record.date}</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">所用時間</div>
-                    <div class="summary-value">${record.time}</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-label">選項數量</div>
-                    <div class="summary-value">${record.optionCount || '未記錄'}個</div>
-                </div>
+                <div class="summary-item"><div class="summary-label">學生</div><div class="summary-value">${record.studentInfo}</div></div>
+                <div class="summary-item"><div class="summary-label">課次</div><div class="summary-value">${record.lessonTitle || '第' + record.lessonId + '課'}</div></div>
+                <div class="summary-item"><div class="summary-label">分數</div><div class="summary-value">${record.score}分</div></div>
+                <div class="summary-item"><div class="summary-label">所用時間</div><div class="summary-value">${record.time}</div></div>
             `;
             detailModalContent.appendChild(summaryDiv);
             
-            // 檢查是否有答題詳情
             if (!record.testDetails || !record.testDetails.questions || record.testDetails.questions.length === 0) {
                 const noDetailDiv = document.createElement('div');
                 noDetailDiv.className = 'no-detail';
                 noDetailDiv.textContent = '此測試記錄沒有保存答題詳情';
                 detailModalContent.appendChild(noDetailDiv);
             } else {
-                // 顯示每題詳情
                 record.testDetails.questions.forEach((question, index) => {
                     const questionDiv = document.createElement('div');
                     questionDiv.className = 'question-detail';
+                    questionDiv.innerHTML = `<h4>第 ${index + 1} 題</h4><div class="question-text">詞語：${question.word}</div>`;
                     
-                    // 題目編號
-                    const questionHeader = document.createElement('div');
-                    questionHeader.innerHTML = `<h4>第 ${index + 1} 題</h4>`;
-                    questionDiv.appendChild(questionHeader);
-                    
-                    // 題目字詞
-                    const questionText = document.createElement('div');
-                    questionText.className = 'question-text';
-                    questionText.textContent = `詞語：${question.word}`;
-                    questionDiv.appendChild(questionText);
-                    
-                    // 選項
                     const optionsDiv = document.createElement('div');
                     optionsDiv.className = 'detail-options';
                     
@@ -1712,98 +1576,60 @@
                         optionDiv.className = 'detail-option';
                         optionDiv.textContent = option;
                         
-                        // 標記正確答案
-                        if (option === question.correctAnswer) {
-                            optionDiv.classList.add('correct-option');
-                        }
-                        
-                        // 標記學生選擇的答案
+                        if (option === question.correctAnswer) optionDiv.classList.add('correct-option');
                         if (option === question.selectedAnswer) {
                             optionDiv.classList.add('selected-option');
-                            
-                            // 如果是正確答案，特殊標記
                             if (option === question.correctAnswer) {
-                                optionDiv.classList.remove('correct-option');
-                                optionDiv.classList.remove('selected-option');
-                                optionDiv.classList.add('selected-correct');
+                                optionDiv.className = 'detail-option selected-correct';
                             } else {
                                 optionDiv.classList.add('selected-incorrect');
                             }
                         }
-                        
                         optionsDiv.appendChild(optionDiv);
                     });
                     
                     questionDiv.appendChild(optionsDiv);
                     
-                    // 答題狀態
                     const answerStatus = document.createElement('div');
                     answerStatus.className = `answer-status ${question.isCorrect ? 'answer-correct' : 'answer-incorrect'}`;
-                    
-                    if (question.isCorrect) {
-                        answerStatus.textContent = `✓ 答對了！學生選擇了正確答案：${question.selectedAnswer}`;
-                    } else {
-                        answerStatus.textContent = `✗ 答錯了！正確答案是：${question.correctAnswer}，學生選擇了：${question.selectedAnswer || '未作答'}`;
-                    }
+                    answerStatus.textContent = question.isCorrect ? 
+                        `✓ 答對了！學生選擇了正確答案：${question.selectedAnswer}` : 
+                        `✗ 答錯了！正確答案是：${question.correctAnswer}，學生選擇了：${question.selectedAnswer || '未作答'}`;
                     
                     questionDiv.appendChild(answerStatus);
-                    
                     detailModalContent.appendChild(questionDiv);
                 });
             }
-            
-            // 顯示彈窗
             detailModal.style.display = 'flex';
         }
         
-        // 初始化學生模式事件
         function initStudentMode() {
-            const startTestBtn = document.getElementById('startTestBtn');
-            const playVoiceBtn = document.getElementById('playVoiceBtn');
-            const nextQuestionBtn = document.getElementById('nextQuestionBtn');
-            const retryTestBtn = document.getElementById('retryTestBtn');
-            const backToStartBtn = document.getElementById('backToStartBtn');
-            
-            startTestBtn.addEventListener('click', function() {
+            document.getElementById('startTestBtn').addEventListener('click', function() {
                 const studentInfo = document.getElementById('studentInfo').value.trim();
-                
                 if (!studentInfo) {
-                    showNotification('請輸入班級、學號或姓名!', 'error');
-                    return;
+                    showNotification('請輸入班級、學號或姓名!', 'error'); return;
                 }
-                
-                // 檢查是否選擇了課次
                 const selectedLesson = lessons.find(l => l.id === currentLesson);
                 if (!selectedLesson || selectedLesson.vocabulary.length === 0) {
-                    showNotification('該課次暫無詞語，請選擇其他課次或通知老師添加詞語!', 'error');
-                    return;
+                    showNotification('該課次暫無詞語，請選擇其他課次或通知老師添加詞語!', 'error'); return;
                 }
                 
                 testData.studentInfo = studentInfo;
                 testData.lessonId = currentLesson;
-                testData.lessonTitle = selectedLesson.title;
-                
-                // 開始測驗
+                testData.lessonTitle = `${selectedLesson.number} - ${selectedLesson.title}`;
                 startTest();
             });
             
-            playVoiceBtn.addEventListener('click', function() {
-                playCurrentWord();
-            });
+            document.getElementById('playVoiceBtn').addEventListener('click', playCurrentWord);
+            document.getElementById('nextQuestionBtn').addEventListener('click', nextQuestion);
             
-            nextQuestionBtn.addEventListener('click', function() {
-                nextQuestion();
-            });
-            
-            retryTestBtn.addEventListener('click', function() {
-                // 重新開始測驗
+            document.getElementById('retryTestBtn').addEventListener('click', function() {
                 document.getElementById('resultsContainer').classList.add('hidden');
                 document.getElementById('testContainer').classList.remove('hidden');
                 startTest();
             });
             
-            backToStartBtn.addEventListener('click', function() {
-                // 返回開始頁面
+            document.getElementById('backToStartBtn').addEventListener('click', function() {
                 document.getElementById('resultsContainer').classList.add('hidden');
                 document.getElementById('testContainer').classList.add('hidden');
                 document.getElementById('lessonSelection').classList.remove('hidden');
@@ -1811,10 +1637,7 @@
                 document.getElementById('startTestBtn').disabled = false;
             });
             
-            // 學生模式的語言選擇按鈕僅供顯示，實際由教師設置控制
-            // 但保留點擊功能以便在測驗中臨時切換語音
             document.getElementById('testCantoneseBtn').addEventListener('click', function() {
-                // 僅在測驗中臨時切換，不影響全局設置
                 currentLanguage = 'cantonese';
                 this.classList.add('active');
                 document.getElementById('testMandarinBtn').classList.remove('active');
@@ -1823,7 +1646,6 @@
             });
             
             document.getElementById('testMandarinBtn').addEventListener('click', function() {
-                // 僅在測驗中臨時切換，不影響全局設置
                 currentLanguage = 'mandarin';
                 this.classList.add('active');
                 document.getElementById('testCantoneseBtn').classList.remove('active');
@@ -1832,51 +1654,32 @@
             });
         }
         
-        // 開始測驗
         function startTest() {
-            // 重置測驗數據
             testData.currentQuestion = 0;
             testData.score = 0;
             testData.startTime = new Date();
             testData.questions = [];
             
-            // 獲取當前課次的詞語
             const selectedLesson = lessons.find(l => l.id === currentLesson);
-            if (!selectedLesson) {
-                showNotification('找不到課次資料', 'error');
-                return;
-            }
-            
             const allWords = [...selectedLesson.vocabulary];
             const selectedWords = [];
             
-            // 確定測驗題數
-            let testSize;
-            if (testSettings.testSize === 'all') {
-                testSize = allWords.length;
-            } else {
-                testSize = Math.min(parseInt(testSettings.testSize), allWords.length);
-            }
+            // 使用者輸入題數限制
+            let testSize = parseInt(testSettings.testSize);
+            testSize = Math.min(testSize, allWords.length);
             
-            // 隨機選擇題目
             for (let i = 0; i < testSize; i++) {
                 if (allWords.length === 0) break;
-                
                 const randomIndex = Math.floor(Math.random() * allWords.length);
                 selectedWords.push(allWords[randomIndex]);
                 allWords.splice(randomIndex, 1);
             }
             
-            // 獲取選項數量
             const optionCount = testSettings.optionCount;
             
-            // 生成每題的選項
-            selectedWords.forEach((word, index) => {
-                // 隨機生成錯誤選項
+            selectedWords.forEach((word) => {
                 const incorrectOptions = [];
                 const allPossibleWords = selectedLesson.vocabulary.filter(w => w !== word);
-                
-                // 確保有足夠的錯誤選項可選
                 const neededIncorrectCount = optionCount - 1;
                 
                 while (incorrectOptions.length < neededIncorrectCount && allPossibleWords.length > 0) {
@@ -1885,12 +1688,10 @@
                     allPossibleWords.splice(randomIndex, 1);
                 }
                 
-                // 如果錯誤選項不足，可以用重複的（但這通常不會發生，因為每課至少8個詞語）
                 while (incorrectOptions.length < neededIncorrectCount) {
                     incorrectOptions.push(word + " (重複)");
                 }
                 
-                // 隨機排列選項
                 const allOptions = [word, ...incorrectOptions];
                 shuffleArray(allOptions);
                 
@@ -1903,14 +1704,9 @@
                 });
             });
             
-            // 更新測驗題數為實際題數
-            const actualTestSize = testData.questions.length;
-            
-            // 顯示學生資訊
             document.getElementById('currentStudentInfo').textContent = 
                 `學生：${testData.studentInfo} | 課次：${selectedLesson.title} | 選項：${optionCount}選1`;
             
-            // 設置語音模式（從教師設置同步）
             currentLanguage = testSettings.language;
             if (currentLanguage === 'cantonese') {
                 document.getElementById('testCantoneseBtn').classList.add('active');
@@ -1922,163 +1718,93 @@
                 document.getElementById('currentLanguageDisplay').textContent = '普通話';
             }
             
-            // 隱藏課次選擇，顯示測驗界面
             document.getElementById('lessonSelection').classList.add('hidden');
             document.getElementById('studentInfo').disabled = true;
             document.getElementById('startTestBtn').disabled = true;
-            
             document.getElementById('testContainer').classList.remove('hidden');
             
-            // 更新進度條
             updateProgressBar();
-            
-            // 載入第一題
             loadQuestion();
         }
         
-        // 載入題目
         function loadQuestion() {
             const question = testData.questions[testData.currentQuestion];
-            const questionNumber = document.getElementById('questionNumber');
             const optionsContainer = document.getElementById('optionsContainer');
-            const nextQuestionBtn = document.getElementById('nextQuestionBtn');
-            const questionPrompt = document.getElementById('questionPrompt');
             
-            // 更新題目編號
-            questionNumber.textContent = `第 ${testData.currentQuestion + 1} 題 / 共 ${testData.questions.length} 題`;
+            document.getElementById('questionNumber').textContent = `第 ${testData.currentQuestion + 1} 題 / 共 ${testData.questions.length} 題`;
+            document.getElementById('questionPrompt').textContent = "🔊 請聽取語音後選擇正確的詞語";
             
-            // 提示文字
-            questionPrompt.textContent = "🔊 請聽取語音後選擇正確的詞語";
-            
-            // 更新進度條
             updateProgressBar();
-            
-            // 生成選項按鈕
             optionsContainer.innerHTML = '';
             
-            // 根據選項數量調整網格佈局
             const optionCount = question.options.length;
-            if (optionCount === 2) {
-                optionsContainer.style.gridTemplateColumns = '1fr 1fr';
-            } else if (optionCount === 3) {
-                optionsContainer.style.gridTemplateColumns = '1fr 1fr 1fr';
-            } else if (optionCount === 4) {
-                optionsContainer.style.gridTemplateColumns = '1fr 1fr';
-            } else if (optionCount === 5) {
-                optionsContainer.style.gridTemplateColumns = '1fr 1fr';
-                // 對於5個選項，使用複雜佈局
-            } else if (optionCount === 6) {
-                optionsContainer.style.gridTemplateColumns = '1fr 1fr 1fr';
-            }
+            if (optionCount <= 2) optionsContainer.style.gridTemplateColumns = '1fr 1fr';
+            else if (optionCount === 3) optionsContainer.style.gridTemplateColumns = '1fr 1fr 1fr';
+            else if (optionCount === 4) optionsContainer.style.gridTemplateColumns = '1fr 1fr';
+            else optionsContainer.style.gridTemplateColumns = '1fr 1fr 1fr';
             
-            // 在手機上總是單列顯示
-            if (window.innerWidth <= 768) {
-                optionsContainer.style.gridTemplateColumns = '1fr';
-            }
+            if (window.innerWidth <= 768) optionsContainer.style.gridTemplateColumns = '1fr';
             
-            question.options.forEach((option, index) => {
+            question.options.forEach(option => {
                 const optionBtn = document.createElement('button');
                 optionBtn.className = 'option-btn';
                 optionBtn.textContent = option;
                 optionBtn.dataset.option = option;
                 
                 optionBtn.addEventListener('click', function() {
-                    // 如果已經選擇了答案，則不處理
                     if (question.selectedAnswer !== null) return;
                     
-                    // 記錄選擇
                     question.selectedAnswer = option;
                     question.isCorrect = (option === question.correctAnswer);
+                    if (question.isCorrect) testData.score++;
                     
-                    // 更新分數
-                    if (question.isCorrect) {
-                        testData.score++;
-                    }
-                    
-                    // 顯示正確/錯誤樣式
                     document.querySelectorAll('.option-btn').forEach(btn => {
                         const btnOption = btn.dataset.option;
                         btn.classList.remove('correct', 'incorrect');
-                        
-                        if (btnOption === question.correctAnswer) {
-                            btn.classList.add('correct');
-                        } else if (btnOption === option && !question.isCorrect) {
-                            btn.classList.add('incorrect');
-                        }
+                        if (btnOption === question.correctAnswer) btn.classList.add('correct');
+                        else if (btnOption === option && !question.isCorrect) btn.classList.add('incorrect');
                     });
                     
-                    // 顯示下一題按鈕
-                    nextQuestionBtn.classList.remove('hidden');
-                    
-                    // 顯示正確答案
-                    questionPrompt.textContent = question.isCorrect ? 
-                        "✅ 答對了！" : 
-                        `❌ 答錯了！正確答案是：${question.correctAnswer}`;
+                    document.getElementById('nextQuestionBtn').classList.remove('hidden');
+                    document.getElementById('questionPrompt').textContent = question.isCorrect ? 
+                        "✅ 答對了！" : `❌ 答錯了！正確答案是：${question.correctAnswer}`;
                 });
                 
                 optionsContainer.appendChild(optionBtn);
             });
             
-            // 隱藏下一題按鈕
-            nextQuestionBtn.classList.add('hidden');
-            
-            // 自動播放語音
-            setTimeout(() => {
-                playCurrentWord();
-            }, 500);
+            document.getElementById('nextQuestionBtn').classList.add('hidden');
+            setTimeout(playCurrentWord, 500);
         }
         
-        // 更新進度條
         function updateProgressBar() {
             const progress = (testData.currentQuestion / testData.questions.length) * 100;
             document.getElementById('progressFill').style.width = `${progress}%`;
         }
         
-        // 下一題
         function nextQuestion() {
             testData.currentQuestion++;
-            
-            if (testData.currentQuestion < testData.questions.length) {
-                loadQuestion();
-            } else {
-                finishTest();
-            }
+            if (testData.currentQuestion < testData.questions.length) loadQuestion();
+            else finishTest();
         }
         
-        // 完成測驗
         function finishTest() {
             testData.endTime = new Date();
             
-            // 計算所用時間
             const timeDiff = testData.endTime - testData.startTime;
             const minutes = Math.floor(timeDiff / 60000);
-            const seconds = ((timeDiff % 60000) / 1000).toFixed(0);
-            const timeUsed = `${minutes}:${seconds.padStart(2, '0')}`;
+            // 修正所用時間進位問題
+            const seconds = Math.floor((timeDiff % 60000) / 1000);
+            const timeUsed = `${minutes}:${seconds.toString().padStart(2, '0')}`;
             
-            // 計算分數百分比
             const scorePercentage = Math.round((testData.score / testData.questions.length) * 100);
             
-            // 根據分數選擇獎章
-            let medal = '';
-            let medalClass = '';
-            if (scorePercentage >= 90) {
-                medal = '🏆';
-                medalClass = 'gold-medal';
-            } else if (scorePercentage >= 70) {
-                medal = '🥈';
-                medalClass = 'silver-medal';
-            } else if (scorePercentage >= 60) {
-                medal = '🥉';
-                medalClass = 'bronze-medal';
-            } else {
-                medal = '🎖️';
-                medalClass = 'bronze-medal';
-            }
+            let medalClass = scorePercentage >= 90 ? 'gold-medal' : (scorePercentage >= 70 ? 'silver-medal' : 'bronze-medal');
+            let medal = scorePercentage >= 90 ? '🏆' : (scorePercentage >= 70 ? '🥈' : (scorePercentage >= 60 ? '🥉' : '🎖️'));
             
             document.getElementById('resultMedal').textContent = medal;
             document.getElementById('resultMedal').className = `medal ${medalClass}`;
             
-            // 記錄測試結果（包含答題詳情）
             const record = {
                 studentInfo: testData.studentInfo,
                 lessonId: testData.lessonId,
@@ -2087,116 +1813,70 @@
                 date: new Date().toISOString().split('T')[0],
                 time: timeUsed,
                 optionCount: testSettings.optionCount,
-                testDetails: {
-                    questions: testData.questions
-                }
+                testDetails: { questions: testData.questions }
             };
             
             studentRecords.push(record);
             localStorage.setItem('studentRecords', JSON.stringify(studentRecords));
             
-            // 顯示結果
             document.getElementById('testContainer').classList.add('hidden');
             document.getElementById('resultsContainer').classList.remove('hidden');
-            
-            // 顯示學生資訊
-            document.getElementById('resultStudentInfo').textContent = 
-                `學生：${testData.studentInfo} | 課次：${testData.lessonTitle} | 選項：${testSettings.optionCount}選1`;
-            
+            document.getElementById('resultStudentInfo').textContent = `學生：${testData.studentInfo} | 課次：${testData.lessonTitle} | 選項：${testSettings.optionCount}選1`;
             document.getElementById('finalScore').textContent = `${scorePercentage}分`;
-            
-            // 更新結果進度條
             document.getElementById('resultProgressFill').style.width = `${scorePercentage}%`;
             
-            let message = '';
-            if (scorePercentage >= 90) {
-                message = '太棒了! 你是認字小高手! 🎉';
-            } else if (scorePercentage >= 70) {
-                message = '不錯! 繼續努力! 👍';
-            } else if (scorePercentage >= 60) {
-                message = '及格了，但還有進步空間! 💪';
-            } else {
-                message = '需要再多加練習哦! 📚';
-            }
+            let msg = scorePercentage >= 90 ? '太棒了! 你是認字小高手! 🎉' : 
+                     (scorePercentage >= 70 ? '不錯! 繼續努力! 👍' : 
+                     (scorePercentage >= 60 ? '及格了，但還有進步空間! 💪' : '需要再多加練習哦! 📚'));
+            document.getElementById('resultMessage').textContent = msg;
             
-            document.getElementById('resultMessage').textContent = message;
-            
-            // 重新啟用輸入欄位
             document.getElementById('studentInfo').disabled = false;
             document.getElementById('startTestBtn').disabled = false;
         }
         
-        // 播放當前詞語語音
         function playCurrentWord() {
             const question = testData.questions[testData.currentQuestion];
-            
             if (!question || !question.word) return;
             
-            // 使用 Web Speech API
             if ('speechSynthesis' in window) {
-                // 停止任何正在播放的語音
                 speechSynthesis.cancel();
-                
                 const utterance = new SpeechSynthesisUtterance(question.word);
                 
-                // 設置語言
                 if (currentLanguage === 'cantonese') {
-                    utterance.lang = 'zh-HK'; // 廣東話
-                    utterance.rate = 0.6; // 廣東話速度更慢
-                    utterance.pitch = 0.9; // 音調稍低
+                    utterance.lang = 'zh-HK';
+                    utterance.rate = 0.6;
+                    utterance.pitch = 0.9;
                 } else {
-                    utterance.lang = 'zh-CN'; // 普通話
-                    utterance.rate = 0.8; // 普通話速度稍慢
-                    utterance.pitch = 1; // 音調
+                    utterance.lang = 'zh-CN';
+                    utterance.rate = 0.8;
+                    utterance.pitch = 1;
                 }
                 
-                // 播放語音前先暫停一下，確保清晰
-                setTimeout(() => {
-                    speechSynthesis.speak(utterance);
-                }, 100);
-                
+                setTimeout(() => speechSynthesis.speak(utterance), 100);
             } else {
                 showNotification('您的瀏覽器不支持語音合成功能', 'error');
             }
         }
         
-        // 載入儲存的設置
         function loadSavedSettings() {
             const savedSettings = localStorage.getItem('testSettings');
-            
             if (savedSettings) {
                 testSettings = JSON.parse(savedSettings);
-                
-                // 更新UI
                 document.getElementById('testSize').value = testSettings.testSize;
                 document.getElementById('optionCount').value = testSettings.optionCount || 4;
-                
-                // 更新語言選擇
-                if (testSettings.language === 'cantonese') {
-                    document.getElementById('cantoneseBtn').click();
-                } else {
-                    document.getElementById('mandarinBtn').click();
-                }
+                if (testSettings.language === 'cantonese') document.getElementById('cantoneseBtn').click();
+                else document.getElementById('mandarinBtn').click();
             }
         }
         
-        // 顯示通知
         function showNotification(message, type = 'success') {
             notification.textContent = message;
             notification.className = 'notification';
-            
-            if (type === 'error') {
-                notification.classList.add('error');
-            }
-            
+            if (type === 'error') notification.classList.add('error');
             notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
+            setTimeout(() => notification.style.display = 'none', 3000);
         }
         
-        // 輔助函數：隨機打亂陣列
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
